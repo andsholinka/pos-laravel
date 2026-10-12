@@ -8,5 +8,22 @@ window.Chart = Chart;
 // Rupiah formatter shared by Alpine components and chart tooltips: 15000 -> "Rp 15.000".
 window.rupiah = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(n || 0));
 
+// Live preview for an <input type="file"> image (product image, store logo).
+// Usage: x-data="imagePreview('current-url-or-null')" + @change="pick($event)" on the input.
+Alpine.data('imagePreview', (initialUrl = null) => ({
+    url: initialUrl,
+    removed: false,
+    pick(event) {
+        const file = event.target.files?.[0];
+        if (this.url && this.url.startsWith('blob:')) {
+            URL.revokeObjectURL(this.url);
+        }
+        this.url = file ? URL.createObjectURL(file) : initialUrl;
+        if (file) {
+            this.removed = false;
+        }
+    },
+}));
+
 // Register Alpine.data components above this line; start() must run last.
 Alpine.start();
