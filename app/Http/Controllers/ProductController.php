@@ -61,7 +61,7 @@ class ProductController extends Controller
         $product->load('category');
 
         $movements = $product->stockMovements()
-            ->with(['user:id,name', 'sale:id,invoice_number'])
+            ->with(['user:id,name', 'sale:id,user_id,invoice_number'])
             ->latest()
             ->latest('id')
             ->paginate(10);

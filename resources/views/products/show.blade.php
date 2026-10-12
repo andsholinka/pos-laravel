@@ -118,7 +118,11 @@
                                 <td class="whitespace-nowrap text-right tabular-nums text-slate-600">{{ $m->stock_before }} → <span class="font-semibold text-slate-900">{{ $m->stock_after }}</span></td>
                                 <td class="max-w-xs text-slate-600">
                                     @if ($m->sale)
-                                        <span class="font-medium text-slate-800">{{ $m->sale->invoice_number }}</span>
+                                        @can('view', $m->sale)
+                                            <a href="{{ route('sales.show', $m->sale) }}" class="font-medium text-slate-800 hover:text-primary-700">{{ $m->sale->invoice_number }}</a>
+                                        @else
+                                            <span class="font-medium text-slate-800">{{ $m->sale->invoice_number }}</span>
+                                        @endcan
                                     @endif
                                     @if ($m->reasonLabel())
                                         <span class="font-medium text-slate-800">{{ $m->reasonLabel() }}</span>

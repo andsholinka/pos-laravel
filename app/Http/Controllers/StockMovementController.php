@@ -29,7 +29,7 @@ class StockMovementController extends Controller
             ->with([
                 'product' => fn ($q) => $q->withTrashed()->select('id', 'name', 'sku', 'unit', 'deleted_at'),
                 'user:id,name',
-                'sale:id,invoice_number',
+                'sale:id,user_id,invoice_number',
             ])
             ->when($filters['product_id'], fn ($q, $id) => $q->where('product_id', $id))
             ->when($filters['type'], fn ($q, $type) => $q->where('type', $type))
