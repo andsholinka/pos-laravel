@@ -24,20 +24,21 @@
     <x-filter-bar :action="route('reports.index')" class="mb-3">
         <div>
             <x-input-label for="from" value="Dari" />
-            <x-text-input id="from" name="from" type="date" :value="$from->format('Y-m-d')" />
+            <x-text-input id="from" name="from" type="date" :value="old('from', $from->format('Y-m-d'))" />
             <x-input-error :messages="$errors->get('from')" class="mt-1" />
         </div>
         <div>
             <x-input-label for="to" value="Sampai" />
-            <x-text-input id="to" name="to" type="date" :value="$to->format('Y-m-d')" />
+            <x-text-input id="to" name="to" type="date" :value="old('to', $to->format('Y-m-d'))" />
             <x-input-error :messages="$errors->get('to')" class="mt-1" />
         </div>
         <div>
             <x-input-label for="group" value="Kelompokkan" />
             <x-select-input id="group" name="group">
                 <option value="">Otomatis</option>
-                <option value="daily" @selected(request('group') === 'daily')>Harian</option>
-                <option value="monthly" @selected(request('group') === 'monthly')>Bulanan</option>
+                {{-- old(): after a failed filter (redirected here without a query) keep what was submitted. --}}
+                <option value="daily" @selected(old('group', request('group')) === 'daily')>Harian</option>
+                <option value="monthly" @selected(old('group', request('group')) === 'monthly')>Bulanan</option>
             </x-select-input>
             <x-input-error :messages="$errors->get('group')" class="mt-1" />
         </div>
