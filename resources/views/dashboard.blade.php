@@ -1,17 +1,15 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
+{{-- Placeholder: the full dashboard (stats, charts, low stock, latest sales) arrives in FEAT-004. --}}
+<x-app-layout title="Dashboard" subtitle="Ringkasan penjualan dan stok toko Anda.">
+    <x-card>
+        <x-empty-state icon="chart-bar"
+                       title="Selamat datang, {{ auth()->user()->name }}"
+                       description="Ringkasan penjualan, grafik, dan peringatan stok akan tampil di sini.">
+            <x-slot name="action">
+                <a href="{{ route('pos.index') }}" class="btn btn-primary">
+                    <x-icon name="shopping-cart" class="h-4 w-4" />
+                    Buka Kasir
+                </a>
+            </x-slot>
+        </x-empty-state>
+    </x-card>
 </x-app-layout>
