@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import Chart from 'chart.js/auto';
+import posApp from './pos';
 
 window.Alpine = Alpine;
 // Expose Chart.js globally so Blade views (dashboard/reports) can render charts.
@@ -24,6 +25,9 @@ Alpine.data('imagePreview', (initialUrl = null) => ({
         }
     },
 }));
+
+// Cashier screen (resources/views/pos/index.blade.php).
+Alpine.data('posApp', posApp);
 
 // Register Alpine.data components above this line; start() must run last.
 Alpine.start();
