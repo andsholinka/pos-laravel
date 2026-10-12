@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PosController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockMovementController;
 use App\Http\Controllers\StoreSettingController;
@@ -46,6 +47,10 @@ Route::middleware('auth')->group(function () {
 
         Route::resource('pengguna', UserController::class)->except('show')->names('users')->parameters(['pengguna' => 'user']);
         Route::patch('/pengguna/{user}/status', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+
+        Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/laporan/pdf', [ReportController::class, 'pdf'])->name('reports.pdf');
+        Route::get('/laporan/csv', [ReportController::class, 'csv'])->name('reports.csv');
 
         Route::get('/pengaturan', [StoreSettingController::class, 'edit'])->name('settings.edit');
         Route::put('/pengaturan', [StoreSettingController::class, 'update'])->name('settings.update');
