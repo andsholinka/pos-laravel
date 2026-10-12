@@ -138,7 +138,7 @@ Barcode scanner USB bekerja seperti keyboard (mengetik kode lalu Enter), jadi la
 ## Arsitektur & Catatan Teknis
 
 - **CheckoutService**: seluruh proses checkout berjalan di dalam satu `DB::transaction`. Harga dan stok selalu dihitung ulang dari database (harga dari browser tidak dipercaya), lalu nama, SKU, harga jual, dan harga beli disalin ke `sale_items` sebagai snapshot agar laporan lama tidak berubah ketika harga produk diubah.
-- **Row lock**: produk yang dibeli dikunci dengan `lockForUpdate()` sehingga dua kasir tidak bisa menjual stok terakhir yang sama. Void transaksi juga berjalan dalam transaksi dan mengembalikan stok.
+- **Row lock**: produk yang dibeli dikunci dengan `lockForUpdate()` sehingga dua kasir tidak bisa menjual stok terakhir yang sama. Di SQLite (yang mengabaikan `lockForUpdate()`), koneksi memakai `transaction_mode` `IMMEDIATE` dan `busy_timeout` 5 detik, sehingga checkout yang bersamaan mengantre, bukan gagal dengan "database is locked". Void transaksi juga berjalan dalam transaksi dan mengembalikan stok.
 - **Nomor invoice**: format `INV-YYYYMMDD-NNNN`, urut per hari, dihitung di dalam transaksi dengan lock, dijaga unique index, dan dicoba ulang hingga 3 kali bila terjadi bentrok.
 - **Ledger stok**: stok produk tidak pernah diubah langsung. Semua perubahan (stok awal, barang masuk, penjualan, penyesuaian, void) lewat `StockService`, yang mencatat baris `stock_movements` berisi jumlah, stok sebelum, dan stok sesudah, sehingga kartu stok selalu bisa diaudit.
 - **Uang sebagai integer**: semua nominal disimpan sebagai bilangan bulat Rupiah untuk menghindari selisih pembulatan float.

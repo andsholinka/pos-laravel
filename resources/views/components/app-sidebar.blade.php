@@ -39,9 +39,15 @@
     );
 @endphp
 
+{{-- Below lg the closed sidebar is `invisible` (not just translated) so its links leave the tab order;
+     visibility is transitioned so the slide-out animation still plays. --}}
 <aside id="app-sidebar"
-       class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-slate-200 bg-white transition-transform duration-200 ease-out lg:translate-x-0"
-       :class="{ '-translate-x-full': ! sidebarOpen }"
+       class="invisible fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col border-r border-slate-200 bg-white transition-[transform,visibility] duration-200 ease-out lg:visible lg:translate-x-0"
+       :class="{ '-translate-x-full invisible lg:visible': ! sidebarOpen }"
+       x-init="$watch('sidebarOpen', open => $nextTick(() => {
+           if (open) { $refs.sidebarClose.focus() }
+           else if ($el.contains(document.activeElement)) { $refs.sidebarToggle.focus() }
+       }))"
        aria-label="Navigasi utama">
     {{-- Brand --}}
     <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-100 px-5">
@@ -54,7 +60,7 @@
             <p class="truncate text-sm font-bold text-slate-900">{{ $store->store_name }}</p>
             <p class="text-xs text-slate-500">Aplikasi Kasir</p>
         </div>
-        <button type="button" class="btn btn-ghost btn-icon lg:hidden" @click="sidebarOpen = false">
+        <button type="button" class="btn btn-ghost btn-icon lg:hidden" x-ref="sidebarClose" @click="sidebarOpen = false">
             <x-icon name="x-mark" class="h-5 w-5" />
             <span class="sr-only">Tutup menu</span>
         </button>

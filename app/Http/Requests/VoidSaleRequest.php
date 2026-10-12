@@ -7,10 +7,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class VoidSaleRequest extends FormRequest
 {
-    /** Admin only, and only for sales that are not already void (SalePolicy::void). */
+    /**
+     * Admin only. An already-void sale is not a permission problem: SaleController::void
+     * reports it with CheckoutService's "Transaksi sudah dibatalkan." message instead of a 403.
+     */
     public function authorize(): bool
     {
-        return $this->user()->can('void', $this->route('sale'));
+        return $this->user()->can('admin');
     }
 
     /**

@@ -12,6 +12,7 @@ use App\Services\CheckoutService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class SaleController extends Controller
@@ -92,7 +93,13 @@ class SaleController extends Controller
 
     public function void(VoidSaleRequest $request, Sale $sale, CheckoutService $checkout): RedirectResponse
     {
-        $checkout->void($sale, $request->user(), $request->validated('reason'));
+        try {
+            $checkout->void($sale, $request->user(), $request->validated('reason'));
+        } catch (ValidationException $e) {
+            // Already void (double submit / stale tab): the void form is no longer rendered,
+            // so surface the message as a toast rather than a field error.
+            return back()->with('error', $e->getMessage());
+        }
 
         return back()->with('success', "Transaksi {$sale->invoice_number} berhasil dibatalkan, stok dikembalikan.");
     }
